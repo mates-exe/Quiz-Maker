@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADT Kvíz - Z JSON (Prohlížení + Revize)</title>
+    <style>
+        /* --- Dark Mode Styles (Same as original) --- */
+        :root {
+            --dark-bg: #2c3e50;
+            --container-bg: #34495e;
+            --text-color: #ecf0f1;
+            --heading-color: #ffffff;
+            --border-color: #566573;
+            --button-bg: #3498db; /* Blue - Next */
+            --button-hover-bg: #2980b9;
+            --button-restart-bg: #2ecc71; /* Green - Restart / Start Direct */
+            --button-restart-hover-bg: #27ae60;
+            --button-show-incorrect-bg: #e74c3c; /* Red - Show Incorrect */
+            --button-show-incorrect-hover-bg: #c0392b;
+            --button-show-all-bg: #9b59b6; /* Purple - Show All */
+            --button-show-all-hover-bg: #8e44ad;
+            --disabled-bg: #7f8c8d;
+            --progress-bar-bg: #3498db;
+            --progress-container-bg: #566573;
+            --option-bg: #4a6f8a;
+            --option-hover-bg: #5c829e;
+            --correct-bg: #27ae60;
+            --correct-border: #2ecc71;
+            --correct-text: #ffffff;
+            --incorrect-bg: #c0392b;
+            --incorrect-border: #e74c3c;
+            --incorrect-text: #ffffff;
+            --reveal-correct-bg: #1e8449;
+            --reveal-correct-border: #27ae60;
+            --reveal-text: #dddddd;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --final-answer-bg: #52be80; /* Green review */
+            --final-answer-border: #2ecc71;
+            --user-incorrect-answer-bg: #c0392b; /* Red review */
+            --user-incorrect-answer-border: #e74c3c;
+            --review-container-bg: #283747;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--dark-bg); color: var(--text-color); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        #quiz-container { background-color: var(--container-bg); border-radius: 12px; box-shadow: 0 8px 25px var(--shadow-color); padding: 30px; width: 100%; max-width: 750px; text-align: center; margin-top: 20px; margin-bottom: 40px; }
+        h1 { color: var(--heading-color); margin-bottom: 5px; font-size: 2.2em; }
+
+        #initial-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; /* Allow wrapping on small screens */ }
+        #toggle-all-questions-initial { background-color: var(--button-show-all-bg); }
+        #toggle-all-questions-initial:hover { background-color: var(--button-show-all-hover-bg); }
+        #start-quiz-direct-btn { background-color: var(--button-restart-bg); }
+        #start-quiz-direct-btn:hover { background-color: var(--button-restart-hover-bg); }
+
+        #loading-message { color: var(--text-color); font-size: 1.2em; margin: 20px 0; display: none; }
+        #error-message { color: var(--button-show-incorrect-bg); font-size: 1.1em; margin: 20px 0; display: none; }
+
+
+        #progress-section { margin-bottom: 25px; }
+        #progress-bar-container { background-color: var(--progress-container-bg); border-radius: 5px; height: 15px; overflow: hidden; margin-bottom: 5px; }
+        #progress-bar { background-color: var(--progress-bar-bg); height: 100%; width: 0%; border-radius: 5px; transition: width 0.3s ease-in-out; }
+        #progress-text { font-size: 0.9em; color: var(--text-color); }
+        #score-section { font-size: 1.2em; font-weight: bold; color: var(--button-restart-bg); margin-bottom: 25px; }
+
+        .question { margin-bottom: 25px; padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; text-align: left; background-color: var(--container-bg); display: none; box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+        .question.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .question h3 { margin-top: 0; margin-bottom: 15px; color: var(--heading-color); font-size: 1.4em; line-height: 1.4; }
+        /* Style for code blocks within questions */
+        .question h3 pre code,
+        .review-answer-item h4 pre code,
+        .all-answer-item h4 pre code {
+            display: block; /* Make it block level */
+            background-color: #283747; /* Darker background for code */
+            color: #d0d3d4; /* Lighter text for code */
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap; /* Wrap long lines */
+            word-wrap: break-word; /* Break words if necessary */
+            margin-top: 10px; /* Add some space above code */
+            border: 1px solid var(--border-color);
+        }
+        .question label { display: block; background-color: var(--option-bg); color: var(--text-color); padding: 12px 15px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease; border: 1px solid var(--border-color); position: relative; }
+        .question label:hover { background-color: var(--option-hover-bg); }
+        .question input[type="radio"] { margin-right: 10px; vertical-align: middle; accent-color: var(--button-bg); }
+        .feedback-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 1.2em; }
+        .question label.correct { background-color: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); font-weight: bold; }
+        .question label.incorrect { background-color: var(--incorrect-bg); border-color: var(--incorrect-border); color: var(--incorrect-text); font-weight: bold; }
+        .question label.correct .feedback-icon::after { content: '✔'; color: var(--correct-text); }
+        .question label.incorrect .feedback-icon::after { content: '✖'; color: var(--incorrect-text); }
+        .question.answered label.reveal-correct { background-color: var(--reveal-correct-bg); border-color: var(--reveal-correct-border); position: relative; }
+        .question.answered label.reveal-correct::before { content: 'Správná odpověď: '; font-weight: normal; font-style: italic; color: var(--reveal-text); margin-right: 5px; }
+
+        #navigation-buttons, #results-buttons { margin-top: 30px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; }
+        button { padding: 12px 20px; font-size: 0.95em; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease; box-shadow: 0 2px 4px var(--shadow-color); flex-grow: 1; min-width: 150px; }
+        button:hover { transform: translateY(-2px); }
+        button:active { transform: scale(0.98) translateY(0); }
+        button:disabled { background-color: var(--disabled-bg); cursor: not-allowed; transform: none; }
+        #nextBtn { background-color: var(--button-bg); display: none; flex-grow: 0; }
+        #nextBtn:hover { background-color: var(--button-hover-bg); }
+
+        #results-screen { display: none; padding: 30px; background-color: var(--container-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-top: 20px; animation: fadeIn 0.5s ease; }
+        #results-screen h2 { color: var(--button-bg); margin-bottom: 15px; }
+        #results-screen p { font-size: 1.3em; color: var(--text-color); margin-bottom: 25px; }
+        #restartBtn { background-color: var(--button-restart-bg); }
+        #restartBtn:hover { background-color: var(--button-restart-hover-bg); }
+        #showIncorrectBtn { background-color: var(--button-show-incorrect-bg); }
+        #showIncorrectBtn:hover { background-color: var(--button-show-incorrect-hover-bg); }
+
+        #review-answers-container, #all-answers-container { margin-top: 30px; padding: 20px; border: 1px dashed var(--border-color); border-radius: 8px; background-color: var(--review-container-bg); display: none; text-align: left; max-height: 70vh; overflow-y: auto; }
+        #review-answers-container h2 { color: var(--button-show-incorrect-bg); text-align: center; margin-bottom: 20px; position: sticky; top: -20px; background: var(--review-container-bg); padding-top: 15px; z-index: 1;}
+        #all-answers-container h2 { color: var(--button-show-all-bg); text-align: center; margin-bottom: 20px; position: sticky; top: -20px; background: var(--review-container-bg); padding-top: 15px; z-index: 1;}
+        #review-answers-container .no-incorrect { text-align: center; font-size: 1.2em; color: var(--button-restart-bg); font-weight: bold; }
+
+        .review-answer-item, .all-answer-item { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .review-answer-item:last-child, .all-answer-item:last-child { border-bottom: none; }
+        .review-answer-item h4, .all-answer-item h4 { margin: 0 0 10px 0; color: var(--heading-color); font-size: 1.1em; }
+        .review-answer-item label, .all-answer-item label { display: block; padding: 8px 12px; margin-bottom: 5px; border-radius: 4px; background-color: var(--option-bg); border: 1px solid var(--border-color); color: var(--text-color); cursor: default; position: relative; }
+        .review-answer-item label.review-answer-correct,
+        .all-answer-item label.all-answer-correct { background-color: var(--final-answer-bg); border-color: var(--final-answer-border); color: #141414; font-weight: bold; }
+        .review-answer-item label.review-answer-correct::before,
+        .all-answer-item label.all-answer-correct::before { content: '✔ '; color: #1D8348; }
+        .review-answer-item label.review-user-incorrect { background-color: var(--user-incorrect-answer-bg); border-color: var(--user-incorrect-answer-border); color: var(--incorrect-text); font-style: italic; }
+        .review-answer-item label.review-user-incorrect::after { content: ' (Vaše odpověď)'; font-size: 0.9em; margin-left: 5px; opacity: 0.8; }
+        .review-answer-item input[type="radio"], .all-answer-item input[type="radio"] { display: none; }
+        .latex, .math-expr { font-style: italic; color: #aed6f1; font-family: 'Cambria Math', 'Latin Modern Math', monospace; font-size: 1.05em; }
+
+        #quiz-content { display: none; }
+        /* Ensure initial buttons are hidden until data loads */
+        #initial-buttons { display: none; }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <h1>🚀 ADT Kvíz (JSON) 🚀</h1>
+
+        <div id="loading-message" style="display: block;">Načítání otázek...</div>
+        <div id="error-message"></div>
+
+        <div id="initial-buttons">
+		    <button id="start-quiz-direct-btn">Spustit kvíz</button>
+            <button id="toggle-all-questions-initial">Zobrazit všechny otázky</button>
+        </div>
+
+        <div id="all-answers-container">
+             <h2>Všechny otázky a odpovědi</h2>
+             <!-- Obsah bude vygenerován JS -->
+        </div>
+
+        <div id="quiz-content">
+            <div id="progress-section">
+                 <div id="progress-bar-container"><div id="progress-bar"></div></div>
+                 <div id="progress-text">Otázka 1 z N</div>
+            </div>
+            <div id="score-section">Skóre: <span id="score">0</span></div>
+
+            <form id="quizForm">
+                 <!-- Otázky budou vloženy zde pomocí JS -->
+            </form>
+
+            <div id="navigation-buttons">
+                 <button id="nextBtn">Další otázka →</button>
+            </div>
+        </div> <!-- End #quiz-content -->
+
+        <div id="results-screen">
+            <h2>🎉 Kvíz dokončen! 🎉</h2>
+            <p>Vaše konečné skóre je: <strong id="final-score">0</strong> z <strong id="total-questions">N</strong></p>
+            <div id="results-buttons">
+                <button id="restartBtn">Hrát znovu</button>
+                <button id="showIncorrectBtn">Zobrazit chybné odpovědi</button>
+            </div>
+        </div>
+
+        <div id="review-answers-container">
+             <h2>Chybně zodpovězené otázky</h2>
+             <!-- Obsah bude vygenerován JS -->
+        </div>
+
+    </div> <!-- End #quiz-container -->
+
+    <script>
+        (function() {
+            // --- Configuration ---
+            const JSON_FILE_PATH = 'questions.json'; // Path to your JSON file
+            const AUTO_ADVANCE_DELAY = 800; // Delay in ms for auto-advance on correct answer
+
+            // --- DOM Elements ---
+            const quizContainer = document.getElementById('quiz-container');
+            const loadingMessage = document.getElementById('loading-message');
+            const errorMessage = document.getElementById('error-message');
+            const quizContent = document.getElementById('quiz-content');
+            const quizForm = document.getElementById('quizForm');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const scoreDisplay = document.getElementById('score');
+            const nextBtn = document.getElementById('nextBtn');
+            const resultsScreen = document.getElementById('results-screen');
+            const finalScoreDisplay = document.getElementById('final-score');
+            const totalQuestionsDisplay = document.getElementById('total-questions');
+            const restartBtn = document.getElementById('restartBtn');
+            const showIncorrectBtn = document.getElementById('showIncorrectBtn');
+            const reviewAnswersContainer = document.getElementById('review-answers-container');
+            const initialButtonsContainer = document.getElementById('initial-buttons');
+            const toggleAllBtnInitial = document.getElementById('toggle-all-questions-initial');
+            const startQuizDirectBtn = document.getElementById('start-quiz-direct-btn');
+            const allAnswersContainer = document.getElementById('all-answers-container');
+
+            // --- State Variables ---
+            let allQuestionsData = []; // Will hold questions loaded from JSON
+            let currentQuizQuestions = []; // Holds the shuffled questions for the current quiz round
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let totalQuestions = 0;
+            let autoAdvanceTimeout = null;
+            let incorrectlyAnswered = []; // Stores { questionData, userAnswerIndex }
+            let quizStarted = false;
+
+            // --- Helper Function: Shuffle Array ---
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // --- Function to Fetch and Initialize Quiz ---
+            async function initializeQuiz() {
+                loadingMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                initialButtonsContainer.style.display = 'none'; // Hide buttons until loaded
+
+                try {
+                    const response = await fetch(JSON_FILE_PATH);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    allQuestionsData = await response.json();
+
+                    if (!Array.isArray(allQuestionsData) || allQuestionsData.length === 0) {
+                         throw new Error("JSON data is not a valid array or is empty.");
+                    }
+
+                    totalQuestions = allQuestionsData.length;
+                    loadingMessage.style.display = 'none';
+                    initialButtonsContainer.style.display = 'flex'; // Show buttons now
+                    setupEventListeners(); // Setup listeners after data is loaded
+                    updateTotalQuestionsDisplays(); // Update placeholders
+
+                } catch (error) {
+                    console.error("Error loading or parsing questions:", error);
+                    loadingMessage.style.display = 'none';
+                    errorMessage.textContent = `Chyba při načítání otázek: ${error.message}. Zkontrolujte soubor '${JSON_FILE_PATH}' a konzoli pro více detailů.`;
+                    errorMessage.style.display = 'block';
+                }
+            }
+
+            // --- Update Total Question Count Placeholders ---
+            function updateTotalQuestionsDisplays() {
+                // Update text in various places where total is shown
+                 progressText.textContent = `Otázka 1 z ${totalQuestions}`; // Initial text
+                 totalQuestionsDisplay.textContent = totalQuestions;
+            }
+
+            // --- Function to start the actual quiz ---
+            function startQuiz() {
+                if (quizStarted || allQuestionsData.length === 0) return; // Don't start if already started or no data
+                quizStarted = true;
+                allAnswersContainer.style.display = 'none'; // Ensure hidden
+                initialButtonsContainer.style.display = 'none'; // Hide the initial button container
+                quizContent.style.display = 'block'; // Show quiz
+                quizContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Create a shuffled copy for the quiz round
+                currentQuizQuestions = shuffleArray([...allQuestionsData]);
+
+                currentQuestionIndex = 0;
+                score = 0;
+                incorrectlyAnswered = []; // Reset state
+                scoreDisplay.textContent = score;
+                progressBar.style.width = '0%';
+                displayQuestion(0); // Show the first shuffled question
+            }
+
+            // --- Function to display a question ---
+            function displayQuestion(index) {
+                 clearTimeout(autoAdvanceTimeout);
+                 autoAdvanceTimeout = null;
+                 quizForm.innerHTML = ''; // Clear previous question
+
+                 if (index < currentQuizQuestions.length) {
+                    const questionData = currentQuizQuestions[index];
+                    const questionElement = document.createElement('div');
+                    questionElement.classList.add('question', 'active');
+                    // Store index for later retrieval in event handler
+                    questionElement.dataset.questionIndex = index;
+
+                    const title = document.createElement('h3');
+                    // Render HTML content (includes <pre><code> for code)
+                    title.innerHTML = questionData.question;
+                    questionElement.appendChild(title);
+
+                    questionData.options.forEach((option, optionIndex) => {
+                        const label = document.createElement('label');
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `q_${index}`; // Unique name for this question's radio group
+                        input.value = optionIndex; // Store the option index as the value
+
+                        label.appendChild(input);
+                        // Append option text - use innerHTML to render potential spans
+                        const optionTextNode = document.createElement('span');
+                        optionTextNode.innerHTML = ` ${option}`; // Add space before option text
+                        label.appendChild(optionTextNode);
+
+                        const feedbackIcon = document.createElement('span');
+                        feedbackIcon.classList.add('feedback-icon');
+                        label.appendChild(feedbackIcon);
+
+                        questionElement.appendChild(label);
+                    });
+
+                    quizForm.appendChild(questionElement);
+                    updateProgress(); // Update progress bar and text
+                    nextBtn.style.display = 'none'; // Hide next button until answered
+                    nextBtn.disabled = false; // Ensure button is enabled
+                    nextBtn.textContent = (index === currentQuizQuestions.length - 1) ? 'Zobrazit výsledky 🏆' : 'Další otázka →';
+
+                 } else {
+                    showResults();
+                 }
+            }
+
+
+            // --- Function to handle answer selection ---
+            function handleAnswer(event) {
+                 const selectedInput = event.target;
+                 if (!selectedInput || selectedInput.tagName !== 'INPUT' || selectedInput.type !== 'radio') return;
+
+                 const currentQuestionElement = selectedInput.closest('.question');
+                 if (!currentQuestionElement || currentQuestionElement.classList.contains('answered')) return;
+
+                 const questionIndex = parseInt(currentQuestionElement.dataset.questionIndex, 10);
+                 const questionData = currentQuizQuestions[questionIndex]; // Get data from shuffled array
+                 const selectedOptionIndex = parseInt(selectedInput.value, 10);
+                 const correctAnswerIndex = questionData.correctAnswerIndex;
+
+                 currentQuestionElement.classList.add('answered');
+                 // Disable all inputs for this question
+                 currentQuestionElement.querySelectorAll('input[type="radio"]').forEach(opt => opt.disabled = true);
+
+                 const isCorrect = selectedOptionIndex === correctAnswerIndex;
+                 const selectedLabel = selectedInput.parentElement;
+
+                 if (isCorrect) {
+                    score++;
+                    scoreDisplay.textContent = score;
+                    selectedLabel.classList.add('correct');
+                    // Auto-advance or show results
+                    if (currentQuestionIndex < currentQuizQuestions.length - 1) { // Use shuffled length
+                        autoAdvanceTimeout = setTimeout(() => { nextQuestion(); }, AUTO_ADVANCE_DELAY);
+                    } else {
+                        autoAdvanceTimeout = setTimeout(() => { showResults(); }, AUTO_ADVANCE_DELAY);
+                    }
+                 } else {
+                    incorrectlyAnswered.push({ questionData: questionData, userAnswerIndex: selectedOptionIndex });
+                    selectedLabel.classList.add('incorrect');
+
+                    // Find and highlight the correct answer's label
+                    const correctInput = currentQuestionElement.querySelector(`input[value="${correctAnswerIndex}"]`);
+                    if (correctInput) {
+                        correctInput.parentElement.classList.add('reveal-correct');
+                         // Also add 'correct' class for styling consistency if needed by reveal-correct
+                         // correctInput.parentElement.classList.add('correct'); // Removed: reveal-correct is sufficient
+                    }
+                    // Show next button immediately for incorrect answers
+                    nextBtn.style.display = 'inline-block';
+                 }
+            }
+
+            // --- Function to go to the next question ---
+            function nextQuestion() {
+                clearTimeout(autoAdvanceTimeout);
+                autoAdvanceTimeout = null;
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentQuizQuestions.length) { // Use shuffled length
+                    displayQuestion(currentQuestionIndex);
+                } else {
+                    showResults();
+                }
+            }
+
+            // --- Function to update progress bar and text ---
+            function updateProgress() {
+                 // Progress based on index (0 to total-1) vs total count
+                 const actualTotal = currentQuizQuestions.length; // Use length of the shuffled array for progress
+                 const progressPercent = actualTotal > 0 ? ((currentQuestionIndex + 1) / actualTotal) * 100 : 0;
+                 progressBar.style.width = `${progressPercent}%`;
+                 // Text shows current question number (1 to total)
+                 progressText.textContent = `Otázka ${Math.min(currentQuestionIndex + 1, actualTotal)} z ${actualTotal}`;
+             }
+
+            // --- Function to show final results ---
+            function showResults() {
+                 clearTimeout(autoAdvanceTimeout);
+                 autoAdvanceTimeout = null;
+                 quizContent.style.display = 'none';
+                 finalScoreDisplay.textContent = score;
+                 totalQuestionsDisplay.textContent = currentQuizQuestions.length; // Show correct total for the round
+                 resultsScreen.style.display = 'block';
+                 reviewAnswersContainer.style.display = 'none'; // Ensure review is hidden initially
+                 showIncorrectBtn.textContent = 'Zobrazit chybné odpovědi'; // Reset button text
+                 // Ensure progress shows 100% completion
+                 progressBar.style.width = '100%';
+                 progressText.textContent = `Dokončeno ${currentQuizQuestions.length} z ${currentQuizQuestions.length}`;
+            }
+
+            // --- Function to restart the quiz ---
+            function restartQuiz() {
+                 quizStarted = false;
+                 resultsScreen.style.display = 'none';
+                 reviewAnswersContainer.style.display = 'none';
+                 allAnswersContainer.style.display = 'none'; // Hide initial view if open
+                 quizContent.style.display = 'none'; // Hide quiz content
+                 toggleAllBtnInitial.textContent = 'Zobrazit všechny otázky'; // Reset button text
+                 // Only show initial buttons if data was loaded successfully
+                 if (allQuestionsData.length > 0) {
+                     initialButtonsContainer.style.display = 'flex'; // Show the initial buttons again
+                 } else {
+                    errorMessage.style.display = 'block'; // Show error if data wasn't loaded
+                 }
+            }
+
+            // --- Function to toggle display of incorrectly answered questions ---
+            function toggleIncorrectAnswers() {
+                 if (reviewAnswersContainer.style.display === 'block') {
+                    reviewAnswersContainer.style.display = 'none';
+                    showIncorrectBtn.textContent = 'Zobrazit chybné odpovědi';
+                 } else {
+                    populateIncorrectAnswers();
+                    reviewAnswersContainer.style.display = 'block';
+                    showIncorrectBtn.textContent = 'Skrýt chybné odpovědi';
+                    reviewAnswersContainer.scrollIntoView({ behavior: 'smooth' });
+                 }
+            }
+
+            // --- Function to populate the review container with incorrect answers ---
+            function populateIncorrectAnswers() {
+                 reviewAnswersContainer.innerHTML = '<h2>Chybně zodpovězené otázky</h2>'; // Reset content
+                 if (incorrectlyAnswered.length === 0) {
+                    reviewAnswersContainer.innerHTML += '<p class="no-incorrect">🎉 Gratulujeme! Všechny odpovědi byly správně! 🎉</p>';
+                    return;
+                 }
+
+                 incorrectlyAnswered.forEach(item => {
+                    const questionData = item.questionData;
+                    const correctAnswerIndex = questionData.correctAnswerIndex;
+                    const userAnswerIndex = item.userAnswerIndex;
+
+                    const answerItemDiv = document.createElement('div');
+                    answerItemDiv.classList.add('review-answer-item');
+
+                    const titleElement = document.createElement('h4');
+                    titleElement.innerHTML = questionData.question; // Use innerHTML for potential spans/code
+                    answerItemDiv.appendChild(titleElement);
+
+                    questionData.options.forEach((option, index) => {
+                        const label = document.createElement('label');
+                        // Use innerHTML for option text to render spans/code
+                        label.innerHTML = option;
+
+                        // Highlight correct answer
+                        if (index === correctAnswerIndex) {
+                            label.classList.add('review-answer-correct');
+                        }
+                        // Highlight user's incorrect answer
+                        if (index === userAnswerIndex) {
+                            label.classList.add('review-user-incorrect');
+                        }
+                        answerItemDiv.appendChild(label);
+                    });
+                    reviewAnswersContainer.appendChild(answerItemDiv);
+                 });
+            }
+
+             // --- Function: Show/Hide ALL Answers (Initial View) ---
+            function toggleAllAnswersInitial() {
+                if (allQuestionsData.length === 0) return; // Do nothing if no data
+
+                if (allAnswersContainer.style.display === 'block') {
+                    // Hiding the list
+                    allAnswersContainer.style.display = 'none';
+                    toggleAllBtnInitial.textContent = 'Zobrazit všechny otázky';
+                } else {
+                    // Showing the list
+                    populateAllAnswers(allAnswersContainer, 'all-answer-item', 'all-answer-correct');
+                    allAnswersContainer.style.display = 'block';
+                    toggleAllBtnInitial.textContent = 'Skrýt otázky';
+                    quizContent.style.display = 'none'; // Ensure quiz is hidden
+                    allAnswersContainer.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            // --- Generic Function: Populate ANY Answers Container (using allQuestionsData) ---
+             function populateAllAnswers(containerElement, itemClass, correctClass) {
+                 // Get the original H2 title before clearing
+                const originalTitle = containerElement.querySelector('h2') ? containerElement.querySelector('h2').textContent : "Otázky a odpovědi";
+                containerElement.innerHTML = `<h2>${originalTitle}</h2>`; // Reset but keep title
+
+                 allQuestionsData.forEach((questionData, index) => { // Iterate over original, unsorted data
+                    const correctAnswerIndex = questionData.correctAnswerIndex;
+
+                    const answerItemDiv = document.createElement('div');
+                    answerItemDiv.classList.add(itemClass);
+
+                    const titleElement = document.createElement('h4');
+                    titleElement.innerHTML = `${index + 1}. ${questionData.question}`; // Use innerHTML
+                    answerItemDiv.appendChild(titleElement);
+
+                    questionData.options.forEach((option, optionIndex) => {
+                        const label = document.createElement('label');
+                        label.innerHTML = option; // Use innerHTML
+
+                        if (optionIndex === correctAnswerIndex) {
+                            label.classList.add(correctClass);
+                        }
+                        answerItemDiv.appendChild(label);
+                    });
+                    containerElement.appendChild(answerItemDiv);
+                 });
+             }
+
+            // --- Setup Event Listeners (Called after data loads) ---
+            function setupEventListeners() {
+                quizForm.addEventListener('change', handleAnswer);
+                nextBtn.addEventListener('click', nextQuestion);
+                restartBtn.addEventListener('click', restartQuiz);
+                showIncorrectBtn.addEventListener('click', toggleIncorrectAnswers);
+                toggleAllBtnInitial.addEventListener('click', toggleAllAnswersInitial);
+                startQuizDirectBtn.addEventListener('click', startQuiz);
+            }
+
+            // --- Initial Load ---
+            document.addEventListener('DOMContentLoaded', initializeQuiz);
+
+        })();
+    </script>
+
+</body>
+</html>
