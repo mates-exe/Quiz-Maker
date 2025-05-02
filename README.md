@@ -108,4 +108,4 @@ Netlify nabízí mnoho dalších funkcí jako vlastní domény, HTTPS certifiká
 
 ## Licence
 
-Tato aplikace je volně k použití pro výukové účely.
+Tato aplikace je volně k použití.
