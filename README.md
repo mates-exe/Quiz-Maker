@@ -1,6 +1,6 @@
 # ADT Kvíz - JSON Quiz Application
 
-Interaktivní aplikace pro testování znalostí z předmětů . Aplikace načítá otázky z JSON souboru a umožňuje uživateli procházet kvízem s okamžitou zpětnou vazbou.
+Interaktivní aplikace pro testování znalostí z předmětů. Aplikace načítá otázky z JSON souboru a umožňuje uživateli procházet kvízem s okamžitou zpětnou vazbou.
 
 ## Demo
 Fungující ukázky aplikace:
