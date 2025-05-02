@@ -67,6 +67,37 @@ Pro vývoj a testování doporučujeme použít Live Server extension ve Visual 
 
 Toto vám umožní provádět změny a okamžitě je vidět bez nutnosti manuálně obnovovat stránku.
 
+## Jak publikovat na Netlify
+
+Pro bezplatné hostování aplikace na internetu můžete využít službu Netlify:
+
+1. **Vytvořte si účet na Netlify**
+   - Navštivte [Netlify](https://www.netlify.com/) a zaregistrujte se (můžete použít GitHub účet)
+
+2. **Nejjednodušší metoda - přetažení adresáře**
+   - Po přihlášení na Netlify přejděte do sekce "Sites"
+   - Přetáhněte celou složku projektu (obsahující `index.html` a `questions.json`) do oblasti s nápisem "Drag and drop your site folder here"
+   - Netlify automaticky nahraje a publikuje vaši stránku
+
+3. **Získání veřejné URL**
+   - Po úspěšném nahrání Netlify vygeneruje náhodnou URL (např. `random-name-123456.netlify.app`)
+   - Tuto URL můžete sdílet s ostatními pro přístup k vašemu kvízu
+
+4. **Volitelné: Úprava názvu stránky**
+   - V přehledu stránky klikněte na "Site settings" a pak na "Change site name"
+   - Zadejte preferovaný název (bude součástí URL jako `vas-nazev.netlify.app`)
+
+5. **Aktualizace obsahu**
+   - Pro aktualizaci stačí znovu přetáhnout složku projektu do Netlify
+   - Nebo můžete nastavit automatické nasazení propojením s GitHub repozitářem
+
+6. **Pokročilé: Propojení s GitHub**
+   - Pokud máte projekt na GitHubu, klikněte na "New site from Git" místo přetažení složky
+   - Vyberte svůj GitHub repozitář a nastavte základní adresář
+   - Netlify poté automaticky aktualizuje web po každém push do repozitáře
+
+Netlify nabízí mnoho dalších funkcí jako vlastní domény, HTTPS certifikáty a formuláře, které jsou dostupné zdarma i v základním plánu.
+
 ## Technologie
 
 - HTML5
