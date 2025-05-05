@@ -526,5 +526,166 @@
       "Dynamické programování je vždy implementováno iterativně (zdola nahoru)."
     ],
     "correctAnswerIndex": 2
+  },
+  {
+    "id": "stack_queue_q1",
+    "question": "Mějme seznam A = [1, 2, 3, 4]. Pokud nejprve vložíme jeho prvky do zásobníku a následně tyto prvky přesuneme do fronty, v jakém pořadí budeme prvky získávat při jejich postupném odebírání z fronty?",
+    "options": [
+      "[1, 2, 3, 4] - Prvky jsou odebrány ve stejném pořadí, jak byly vloženy do seznamu.",
+      "[4, 1, 3, 2] - Prvky jsou odebrány v náhodném pořadí.",
+      "Takto nelze ADT Zásobní a ADT Fronta řetězit.",
+      "[4, 3, 2, 1] - Prvky jsou odebrány v obráceném pořadí oproti jejich vložení do seznamu."
+    ],
+    "correctAnswerIndex": 3
+  },
+  {
+    "id": "dijkstra_complexity_q1",
+    "question": "Jaká je složitost nejhoršího případu algoritmu hledání nejkratší cesty, založeném na Dijkstrově algoritmu? V je počet vrcholů grafu a E je počet hran grafu.<br>Algoritmus používá prioritní frontu se složitostmi operací:<br><ul><li>Vložení prvku: Θ(log V)</li><li>Odebrání minima: Θ(log V)</li><li>Snížení hodnoty klíče: Θ(log V)</li></ul>",
+    "options": [
+      "Θ(|E|^2 log |V|)",
+      "Θ(|V|^2 log |V|)",
+      "Θ(|V|^2 |E|^2 log |V|)",
+      "Θ(|V| |E|^2 log |V|)"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": "python_code_output_q1",
+    "question": "Co vypíše následující program?<br><pre><code>class SignatureCreator:\n    def create_signature(self) -> str:\n        return \"Signed\"\n\nclass SignAdapter:\n    def __init__(self, creator):\n        self.creator = creator\n\n    def sign(self) -> bool:\n        return self.creator.create_signature() == \"Signed\"\n\nsigning = SignAdapter(SignatureCreator())\n\nif signing.sign():\n    print(\"OK\")</code></pre>",
+    "options": [
+      "Signed",
+      "Program vrátí chybové hlášení: AttributeError: 'SignatureCreator' object has no attribute 'sign'",
+      "True",
+      "OK"
+    ],
+    "correctAnswerIndex": 3
+  },
+  {
+    "id": "search_partial_sort_q1",
+    "question": "Mějme seřazený seznam, do kterého se vkládá je velmi zřídka. V průběhu vkládáme 5 prvků denně a v noci seznam opět seřadíme. Jaká bude průměrná algoritmická složitost vyhledání prvku v částečně seřazeném seznamu (vzhlem k délce seznamu), který má na konci v průměru 5 neseřazených prvků.<br>Uvažujte níže uvedenou implementaci vyhledávání:<br><pre><code>partially_sorted_array = [0, 5, 11, 28, 36, 71, 105] + [12, 7, 9, 3, 2]\nsorted_len = 7\ntarget = 7\nmax_unsorted_length = 5\nresult: int = -1\n\nsorted_array = partially_sorted_array[:sorted_len]\nunsorted_array = partially_sorted_array[sorted_len:]\n\nif len(unsorted_array) > max_unsorted_length:\n    print(\"The unsorted array is too long.\")\n\nleft, right = 0, len(sorted_array) - 1\nwhile left <= right:\n    mid = (left + right) // 2\n    if sorted_array[mid] == target:\n        result = mid\n        break\n    elif sorted_array[mid] < target:\n        left = mid + 1\n    else:\n        right = mid - 1\nelse: # only runs if break didn't happen in the while loop\n    for i, item in enumerate(unsorted_array):\n        if item == target:\n            result = len(sorted_array) + i\n            break\n\nprint(f\"Index of the target element: {result}\")\n</code></pre>",
+    "options": [
+      "Θ(n^2)",
+      "Θ(log(n))",
+      "Θ(n log(n))",
+      "Θ(n)"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": "python_dynamic_typing_q1",
+    "question": "Vyberte správná tvrzení vztahující se k dynamickému typování v Pythonu.",
+    "options": [
+      "Proměnným lze během provádění programu přiřadit hodnoty různých datových typů.",
+      "Datové typy v Pythonu slouží pouze jako nápověda a tudíž nespecifikují operace s proměnnými.",
+      "Python vyžaduje explicitní deklaraci (určení) datových typů proměnných před jejich přiřazením.",
+      "Proměnné v Pythonu jsou omezeny na jeden datový typ po celou dobu své existence."
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": "mergesort_bubblesort_speed_q1",
+    "question": "Je zaručené, že algoritmus řazení Merge sort doběhne vždy rychleji než algoritmus Bubble sort?",
+    "options": [
+      "Pravda",
+      "Nepravda"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": "complexity_comparison_on_omega_q1",
+    "question": "Mějme algoritmus Alg1 se složitostí patřící do třídy O(n^3) a algoritmus Alg2 do třídy Ω(n^2). Jaká tvrzení o vzájemném porovnání Alg1 a Alg2 z těchto tvrzení vyplývají?",
+    "options": [
+      "Algoritmy neumíme na základě poskytnutých údajů porovnat.",
+      "Alg1 má nižší složitost než Alg2.",
+      "Alg1 má vyšší složitost než Alg2.",
+      "Algoritmy mají složitost spadající do stejné třídy v Θ notaci."
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": "nested_loop_complexity_q1",
+    "question": "Jaká je časová složitost následujícího kódu, kde `n` odpovídá `num_lines`?<br><pre><code>def print_tree(num_lines: int) -> None:\n    for k in range(5):\n        for i in range(num_lines + k):\n            for j in range(i + 1):\n                print('*', end='')\n            print()</code></pre>",
+    "options": [
+        "Θ(n)",
+        "Θ(5 n^3 / 2)",
+        "Θ(n^2)",
+        "Θ(n^3)"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": "backtracking_coin_change_q1",
+    "question": "Třída složitosti nejhoršího případu algoritmu backtracking pro rozměňování mincí je Θ(m^n), kde<br><ul><li><i>n</i> je počet různých nominálních hodnot mincí.</li><li><i>m</i> je maximální počet dostupných mincí pro jakoukoliv nominální hodnotu.</li></ul>Zmíněný algoritmus najde jedno řešení. Jaká bude třída složitosti algoritmu, který najde všechna řešení? Opět uvažujeme nejhorší případ.",
+    "options": [
+      "Θ(mn)",
+      "Θ(2^mn)",
+      "Θ(m^n)",
+      "Θ(2^m n)"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": "hash_function_suitability_q1",
+    "question": "Je následující implementace rozptylové funkce vhodná pro použití v rozptylových tabulkách?<br><pre><code>class User:\n    def __init__(self, name, email):\n        self.name = name\n        self.email = email\n\n    def __hash__(self):\n        return len(self.name)</code></pre>",
+    "options": [
+      "Pravda",
+      "Nepravda"
+    ],
+    "correctAnswerIndex": 1
+  },
+    {
+    "id": "tree_traversal_complexity_q1",
+    "question": "Jaká je složitost nejhoršího případu algoritmů procházení do hloubky (DFS) a do šířky (BFS) ADT strom? (n je počet vrcholů stromu)",
+    "options": [
+      "Θ(n) pro BFS a Θ(n^2) pro DFS.",
+      "Θ(n) pro DFS a Θ(n^2) pro BFS.",
+      "Θ(n) pro oba algoritmy.",
+      "Θ(n^2) pro oba algoritmy."
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": "jarnik_prim_fifo_q1",
+    "question": "Jaký bude výsledek algoritmu hledání minimální kostry (podobného Primovu/Jarníkovu), pokud nebudeme uzly vybírat pomocí prioritní fronty podle nejnižšího ohodnocení, ale nahradíme ji normální frontou (FIFO)? (Viz implementace v testu - používá FIFO frontu a aktualizuje `min_weight` a `parent` podobně jako Prim, ale bez priority)",
+    "options": [
+      "Algoritmus nenajde kostru grafu.",
+      "Algoritmus najde minimální kostru grafu, ovšem bude opakovaně navštěvovat již navštívené uzly a zvýší se jeho algoritmická složitost.",
+      "Algoritmus najde minimální kostru grafu, ovšem bude opakovaně navštěvovat již navštívené uzly. Tím se sníží efektivita algoritmu, ale zachová se třída algoritmické složitosti Θ.",
+      "Nalezená kostra nebude minimální."
+    ],
+    "correctAnswerIndex": 3
+  },
+  {
+    "id": "adt_student_project_q1",
+    "question": "Představme si situaci ve školním prostředí, kde učitelé z různých předmětů chtějí organizovat tematické týdny zaměřené na interdisciplinární projekty. Každý tematický týden má svou specifickou náplň, jako je \"Věda a technologie\", \"Umění a kultura\", \"Sport a zdraví\" atd. Studenti se mohou přihlásit do projektu podle svých zájmů, přičemž každý student může být součástí projektů ve více tematických týdnech. Na konci školního roku je potřeba zorganizovat slavnostní prezentaci projektů, přičemž učitelé chtějí zajistit, že budou prezentovány projekty z každého tematického týdne s co nejširším zastoupením studentů.<br><br><b>Otázka:</b> Jaký abstraktní datový typ (ADT) by byl optimální pro identifikaci studentů, kteří se přihlásili do projektů napříč různými tematickými týdny s cílem zajistit reprezentaci všech témat ve finální prezentaci a zároveň identifikovat studenty, kteří se zapojili do projektů ve více než jednom tematickém týdnu?",
+    "options": [
+      "ADT Množina",
+      "ADT Zásobník",
+      "ADT Seznam",
+      "ADT Fronta"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": "adt_web_history_q1",
+    "question": "Při vývoji webového prohlížeče potřebujete implementovat funkci pro správu historie procházení, kde uživatelé mohou snadno postupně vrátit zpět na předchozí stránky, na které se dívali. Která datová struktura je pro tuto úlohu nejvhodnější?",
+    "options": [
+      "Zásobník, protože umožňuje přidávání a odebírání prvků z vrcholu (LIFO).",
+      "Fronta, protože umožňuje přidávání prvků na konec a odebírání z počátku (FIFO).",
+      "Seznam, protože umožňuje vkládání a mazání prvků na libovolné pozici.",
+      "Fronta, ovšem musíme zvolit implementaci spojovým seznamem."
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": "python_matrix_output_q1",
+    "question": "Jaké prvky vypíše následující program?<br><pre><code>matrix = [[1, 2, 3, 4, 5],\n          [6, 7, 8, 9, 10],\n          [11, 12, 13, 14, 15],\n          [16, 17, 18, 19, 20]]\n\nfor i in range(2, 3):\n    for j in range(0, 2):\n        print(matrix[i][j])\n</code></pre>",
+    "options": [
+      "11, 12, 13, 16, 17, 18",
+      "6, 7, 8, 11, 12, 13",
+      "11, 12",
+      "7, 8, 9, 12, 13, 14"
+    ],
+    "correctAnswerIndex": 2
   }
 ]

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADT Kvíz - Z JSON (Prohlížení + Revize)</title>
+    <title>ADT Kvíz</title>
     <style>
         /* --- Dark Mode Styles (Same as original) --- */
         :root {
@@ -134,7 +134,7 @@
 </head>
 <body>
     <div id="quiz-container">
-        <h1>🚀 ADT Kvíz (JSON) 🚀</h1>
+        <h1>🚀 ADT Kvíz 🚀</h1>
 
         <div id="loading-message" style="display: block;">Načítání otázek...</div>
         <div id="error-message"></div>
@@ -215,14 +215,20 @@
             let score = 0;
             let totalQuestions = 0;
             let autoAdvanceTimeout = null;
-            let incorrectlyAnswered = []; // Stores { questionData, userAnswerIndex }
+            let incorrectlyAnswered = []; // Stores { questionData, userAnswerIndex (original index) }
             let quizStarted = false;
 
-            // --- Helper Function: Shuffle Array ---
+            // --- Helper Function: Shuffle Array (Fisher-Yates Algorithm) ---
             function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
+                let currentIndex = array.length, randomIndex;
+                // While there remain elements to shuffle.
+                while (currentIndex !== 0) {
+                    // Pick a remaining element.
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    // And swap it with the current element.
+                    [array[currentIndex], array[randomIndex]] = [
+                        array[randomIndex], array[currentIndex]];
                 }
                 return array;
             }
@@ -236,9 +242,18 @@
                 try {
                     const response = await fetch(JSON_FILE_PATH);
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        // Try fetching from the same directory explicitly if simple path fails
+                        // Useful if base URL isn't what's expected
+                        const explicitPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/' + JSON_FILE_PATH;
+                        const response2 = await fetch(explicitPath);
+                        if (!response2.ok) {
+                             throw new Error(`HTTP error! status: ${response.status} / ${response2.status}`);
+                        }
+                         allQuestionsData = await response2.json();
+                    } else {
+                         allQuestionsData = await response.json();
                     }
-                    allQuestionsData = await response.json();
+
 
                     if (!Array.isArray(allQuestionsData) || allQuestionsData.length === 0) {
                          throw new Error("JSON data is not a valid array or is empty.");
@@ -253,7 +268,7 @@
                 } catch (error) {
                     console.error("Error loading or parsing questions:", error);
                     loadingMessage.style.display = 'none';
-                    errorMessage.textContent = `Chyba při načítání otázek: ${error.message}. Zkontrolujte soubor '${JSON_FILE_PATH}' a konzoli pro více detailů.`;
+                    errorMessage.textContent = `Chyba při načítání otázek: ${error.message}. Zkontrolujte, zda soubor '${JSON_FILE_PATH}' existuje ve stejném adresáři a je validní JSON. Spouštíte stránku přes HTTP server? (viz konzole F12)`;
                     errorMessage.style.display = 'block';
                 }
             }
@@ -274,7 +289,7 @@
                 quizContent.style.display = 'block'; // Show quiz
                 quizContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-                // Create a shuffled copy for the quiz round
+                // Shuffle the order of questions for the quiz round
                 currentQuizQuestions = shuffleArray([...allQuestionsData]);
 
                 currentQuestionIndex = 0;
@@ -295,7 +310,7 @@
                     const questionData = currentQuizQuestions[index];
                     const questionElement = document.createElement('div');
                     questionElement.classList.add('question', 'active');
-                    // Store index for later retrieval in event handler
+                    // Store index *of the shuffled array* for later retrieval
                     questionElement.dataset.questionIndex = index;
 
                     const title = document.createElement('h3');
@@ -303,27 +318,41 @@
                     title.innerHTML = questionData.question;
                     questionElement.appendChild(title);
 
-                    questionData.options.forEach((option, optionIndex) => {
+                    // --- Create and Shuffle Options ---
+                    // 1. Create an array of objects, pairing option text with its ORIGINAL index
+                    let optionsWithOriginalIndex = questionData.options.map((optionText, originalIdx) => ({
+                        text: optionText,
+                        originalIndex: originalIdx
+                    }));
+
+                    // 2. Shuffle this array
+                    let shuffledOptions = shuffleArray(optionsWithOriginalIndex);
+                    // --- End Shuffle Options ---
+
+                    // 3. Iterate through the SHUFFLED options to create labels/inputs
+                    shuffledOptions.forEach(optionData => {
                         const label = document.createElement('label');
                         const input = document.createElement('input');
                         input.type = 'radio';
-                        input.name = `q_${index}`; // Unique name for this question's radio group
-                        input.value = optionIndex; // Store the option index as the value
+                        input.name = `q_${index}`; // Unique name based on the displayed question's position
+                        // **IMPORTANT**: Value is the ORIGINAL index, needed for checking correctness
+                        input.value = optionData.originalIndex;
 
                         label.appendChild(input);
                         // Append option text - use innerHTML to render potential spans
                         const optionTextNode = document.createElement('span');
-                        optionTextNode.innerHTML = ` ${option}`; // Add space before option text
+                        optionTextNode.innerHTML = ` ${optionData.text}`; // Add space before option text
                         label.appendChild(optionTextNode);
 
                         const feedbackIcon = document.createElement('span');
                         feedbackIcon.classList.add('feedback-icon');
                         label.appendChild(feedbackIcon);
 
-                        questionElement.appendChild(label);
+                        questionElement.appendChild(label); // Append the label to the question div
                     });
 
-                    quizForm.appendChild(questionElement);
+
+                    quizForm.appendChild(questionElement); // Append the whole question div to the form
                     updateProgress(); // Update progress bar and text
                     nextBtn.style.display = 'none'; // Hide next button until answered
                     nextBtn.disabled = false; // Ensure button is enabled
@@ -338,21 +367,27 @@
             // --- Function to handle answer selection ---
             function handleAnswer(event) {
                  const selectedInput = event.target;
+                 // Basic validation
                  if (!selectedInput || selectedInput.tagName !== 'INPUT' || selectedInput.type !== 'radio') return;
 
                  const currentQuestionElement = selectedInput.closest('.question');
+                 // Check if the question element is found and hasn't been answered yet
                  if (!currentQuestionElement || currentQuestionElement.classList.contains('answered')) return;
 
-                 const questionIndex = parseInt(currentQuestionElement.dataset.questionIndex, 10);
-                 const questionData = currentQuizQuestions[questionIndex]; // Get data from shuffled array
-                 const selectedOptionIndex = parseInt(selectedInput.value, 10);
-                 const correctAnswerIndex = questionData.correctAnswerIndex;
+                 // Get the index of the question *as it's currently displayed* (from the shuffled array)
+                 const questionIndexInShuffledArray = parseInt(currentQuestionElement.dataset.questionIndex, 10);
+                 // Get the actual question data using this index
+                 const questionData = currentQuizQuestions[questionIndexInShuffledArray];
+                 // Get the selected answer's ORIGINAL index (stored in the radio button's value)
+                 const selectedOriginalOptionIndex = parseInt(selectedInput.value, 10);
+                 // Get the correct answer's index (always refers to the original order)
+                 const correctAnswerOriginalIndex = questionData.correctAnswerIndex;
 
                  currentQuestionElement.classList.add('answered');
                  // Disable all inputs for this question
                  currentQuestionElement.querySelectorAll('input[type="radio"]').forEach(opt => opt.disabled = true);
 
-                 const isCorrect = selectedOptionIndex === correctAnswerIndex;
+                 const isCorrect = selectedOriginalOptionIndex === correctAnswerOriginalIndex;
                  const selectedLabel = selectedInput.parentElement;
 
                  if (isCorrect) {
@@ -360,21 +395,24 @@
                     scoreDisplay.textContent = score;
                     selectedLabel.classList.add('correct');
                     // Auto-advance or show results
-                    if (currentQuestionIndex < currentQuizQuestions.length - 1) { // Use shuffled length
+                    if (currentQuestionIndex < currentQuizQuestions.length - 1) {
                         autoAdvanceTimeout = setTimeout(() => { nextQuestion(); }, AUTO_ADVANCE_DELAY);
                     } else {
                         autoAdvanceTimeout = setTimeout(() => { showResults(); }, AUTO_ADVANCE_DELAY);
                     }
                  } else {
-                    incorrectlyAnswered.push({ questionData: questionData, userAnswerIndex: selectedOptionIndex });
+                     // Store the original index of the user's incorrect answer
+                    incorrectlyAnswered.push({
+                        questionData: questionData,
+                        userAnswerIndex: selectedOriginalOptionIndex // Store the ORIGINAL index
+                    });
                     selectedLabel.classList.add('incorrect');
 
                     // Find and highlight the correct answer's label
-                    const correctInput = currentQuestionElement.querySelector(`input[value="${correctAnswerIndex}"]`);
+                    // We need to find the input whose VALUE matches the correct ORIGINAL index
+                    const correctInput = currentQuestionElement.querySelector(`input[value="${correctAnswerOriginalIndex}"]`);
                     if (correctInput) {
                         correctInput.parentElement.classList.add('reveal-correct');
-                         // Also add 'correct' class for styling consistency if needed by reveal-correct
-                         // correctInput.parentElement.classList.add('correct'); // Removed: reveal-correct is sufficient
                     }
                     // Show next button immediately for incorrect answers
                     nextBtn.style.display = 'inline-block';
@@ -448,6 +486,7 @@
             }
 
             // --- Function to populate the review container with incorrect answers ---
+            // **NO CHANGE NEEDED HERE FOR SHUFFLING** - Review shows original order
             function populateIncorrectAnswers() {
                  reviewAnswersContainer.innerHTML = '<h2>Chybně zodpovězené otázky</h2>'; // Reset content
                  if (incorrectlyAnswered.length === 0) {
@@ -457,8 +496,9 @@
 
                  incorrectlyAnswered.forEach(item => {
                     const questionData = item.questionData;
-                    const correctAnswerIndex = questionData.correctAnswerIndex;
-                    const userAnswerIndex = item.userAnswerIndex;
+                    const correctAnswerOriginalIndex = questionData.correctAnswerIndex;
+                    // This is the ORIGINAL index the user selected
+                    const userAnswerOriginalIndex = item.userAnswerIndex;
 
                     const answerItemDiv = document.createElement('div');
                     answerItemDiv.classList.add('review-answer-item');
@@ -467,17 +507,17 @@
                     titleElement.innerHTML = questionData.question; // Use innerHTML for potential spans/code
                     answerItemDiv.appendChild(titleElement);
 
-                    questionData.options.forEach((option, index) => {
+                    // Display options in their ORIGINAL order for clarity in review
+                    questionData.options.forEach((option, originalIndex) => {
                         const label = document.createElement('label');
-                        // Use innerHTML for option text to render spans/code
-                        label.innerHTML = option;
+                        label.innerHTML = option; // Use innerHTML
 
                         // Highlight correct answer
-                        if (index === correctAnswerIndex) {
+                        if (originalIndex === correctAnswerOriginalIndex) {
                             label.classList.add('review-answer-correct');
                         }
                         // Highlight user's incorrect answer
-                        if (index === userAnswerIndex) {
+                        if (originalIndex === userAnswerOriginalIndex) {
                             label.classList.add('review-user-incorrect');
                         }
                         answerItemDiv.appendChild(label);
@@ -487,6 +527,7 @@
             }
 
              // --- Function: Show/Hide ALL Answers (Initial View) ---
+             // **NO CHANGE NEEDED HERE FOR SHUFFLING** - List shows original order
             function toggleAllAnswersInitial() {
                 if (allQuestionsData.length === 0) return; // Do nothing if no data
 
@@ -505,6 +546,7 @@
             }
 
             // --- Generic Function: Populate ANY Answers Container (using allQuestionsData) ---
+            // **NO CHANGE NEEDED HERE FOR SHUFFLING** - List shows original order
              function populateAllAnswers(containerElement, itemClass, correctClass) {
                  // Get the original H2 title before clearing
                 const originalTitle = containerElement.querySelector('h2') ? containerElement.querySelector('h2').textContent : "Otázky a odpovědi";
@@ -520,6 +562,7 @@
                     titleElement.innerHTML = `${index + 1}. ${questionData.question}`; // Use innerHTML
                     answerItemDiv.appendChild(titleElement);
 
+                    // Display options in original order
                     questionData.options.forEach((option, optionIndex) => {
                         const label = document.createElement('label');
                         label.innerHTML = option; // Use innerHTML
