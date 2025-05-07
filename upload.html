@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create or Fork a Quiz</h1>
+        <!-- Changed form attributes for server-side submission -->
+        <form id="uploadForm" action="/create-quiz" method="POST" enctype="multipart/form-data">
+            <div>
+                <label for="quizName">Quiz Name:</label>
+                <input type="text" id="quizName" name="quizName" required placeholder="e.g., My Awesome Quiz">
+            </div>
+            <div>
+                <label for="jsonFile">Quiz JSON File:</label>
+                <input type="file" id="jsonFile" name="jsonFile" accept=".json" required>
+            </div>
+            <button type="submit">Generate Quiz Files</button>
+        </form>
+        <div id="server-response" style="margin-top: 20px;">
+            <!-- Server response will be shown here if not redirecting -->
+        </div>
+        <a href="index.html" class="home-link">← Back to Home</a>
+        <br><br>
+        <div id="json-format-example">
+            <h2>JSON Format Prompt for AI:</h2>
+            <pre>
+Ahoj, vytvoř z přiložených souborů sadu otázek. Otázky formátuj do JSONu podle následujícího vzoru (příklad níže slouží pouze pro ukázku formátování, použité otázky nepoužívej):
+    
+<code>
+[
+{
+"id": "q1",
+"question": "Váhová (impulsní) funkce systému h(t) je:",
+"options": [
+  "derivace přechodové charakteristiky",
+  "sinusový signál",
+  "důsledek principu superpozice"
+],
+"correctAnswerIndex": 2
+},
+{
+"id": "q2",
+"question": "První průmyslově vyráběný regulátor otáček parního stroje pracoval na principu:",
+"options": [
+  "odstředivé síly",
+  "tíhové síly",
+  "elektromagnetické síly"
+],
+"correctAnswerIndex": 0
+}
+]</code>
+Prosím, vytvoř otázky na základě obsahu přiložených souborů a ulož je v tomto formátu.</pre>
+        </div>
+    </div>
+    
+    <script>
+        // Client-side script for handling form submission response (optional)
+        const form = document.getElementById('uploadForm');
+        const serverResponseDiv = document.getElementById('server-response');
+
+        form.addEventListener('submit', async function(event) {
+            // This client-side script is mostly for UX if you want to handle
+            // the response without a full page reload, or display messages.
+            // The actual file processing is done by the server.
+            // For this example, we'll let the browser handle the form submission
+            // and the server will send back a new page or a message.
+            // If you want to use fetch API here:
+            /*
+            event.preventDefault();
+            const formData = new FormData(form);
+            serverResponseDiv.innerHTML = "<p>Processing...</p>";
+            try {
+                const response = await fetch('/create-quiz', {
+                    method: 'POST',
+                    body: formData, // FormData handles multipart/form-data
+                });
+                const resultText = await response.text(); // Or response.json() if server sends JSON
+                serverResponseDiv.innerHTML = resultText; // Display server's HTML response
+                if (response.ok) {
+                    form.reset();
+                }
+            } catch (error) {
+                serverResponseDiv.innerHTML = `<p style="color: #e74c3c;">Error submitting form: ${error.message}</p>`;
+            }
+            */
+        });
+    </script>
+</body>
+</html>

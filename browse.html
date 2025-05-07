@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Quizzes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Available Quizzes</h1>
+        <div id="quiz-list">
+            <p>Loading quizzes...</p>
+        </div>
+        <a href="index.html" class="home-link">← Back to Home</a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const quizListDiv = document.getElementById('quiz-list');
+            try {
+                const response = await fetch('/list-quizzes');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const quizzes = await response.json();
+
+                if (quizzes.length === 0) {
+                    quizListDiv.innerHTML = '<p>No quizzes created yet. Go to "Create New Quiz" to make one!</p>';
+                } else {
+                    const ul = document.createElement('ul');
+                    quizzes.forEach(quiz => {
+                        const li = document.createElement('li');
+                        
+                        const quizNameSpan = document.createElement('span'); // Use a span for the name
+                        quizNameSpan.textContent = quiz.displayName;
+                        quizNameSpan.classList.add('quiz-name-display');
+                        li.appendChild(quizNameSpan);
+
+                        const buttonsDiv = document.createElement('div'); // Container for buttons
+                        buttonsDiv.classList.add('quiz-actions');
+
+                        const takeQuizLink = document.createElement('a');
+                        takeQuizLink.href = quiz.viewQuizUrl; // Use the new URL from server
+                        takeQuizLink.textContent = 'Take Quiz';
+                        takeQuizLink.target = "_blank";
+                        takeQuizLink.classList.add('action-btn', 'take-quiz-btn');
+                        buttonsDiv.appendChild(takeQuizLink);
+
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = quiz.downloadJsonUrl;
+                        downloadLink.textContent = 'Download Questions';
+                        downloadLink.classList.add('action-btn', 'download-json-btn');
+                        buttonsDiv.appendChild(downloadLink);
+                        
+                        li.appendChild(buttonsDiv);
+                        ul.appendChild(li);
+                    });
+                    quizListDiv.innerHTML = ''; 
+                    quizListDiv.appendChild(ul);
+                }
+            } catch (error) {
+                console.error("Failed to load quizzes:", error);
+                quizListDiv.innerHTML = `<p style="color: #e74c3c;">Failed to load quizzes: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

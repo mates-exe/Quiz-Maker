@@ -1,111 +1,72 @@
-# ADT Kvíz - JSON Quiz Application
+# Quiz Maker Application
 
-Interaktivní aplikace pro testování znalostí z předmětů . Aplikace načítá otázky z JSON souboru a umožňuje uživateli procházet kvízem s okamžitou zpětnou vazbou.
+## Description
 
-## Demo
-Fungující ukázky aplikace:
-- [ZKY Quiz](https://zky.netlify.app/)
-- [ADT Kvíz](https://adt-kviz.netlify.app/)
+This is a simple web application that allows users to create and take quizzes. Users can upload a JSON file containing quiz questions, and the application will generate a unique, shareable quiz page. It also provides an interface to browse existing quizzes.
 
-## Hlavní funkce
+The application is built using Node.js with Express.js for the backend and plain HTML, CSS, and JavaScript for the frontend.
 
-- **Načítání otázek z JSON**: Aplikace dynamicky načítá otázky ze souboru `questions.json`
-- **Náhodné pořadí otázek**: Otázky jsou při každém spuštění kvízu náhodně seřazeny
-- **Okamžitá zpětná vazba**: Uživatel ihned vidí, zda odpověděl správně nebo špatně
-- **Automatické posouvání**: Při správné odpovědi se kvíz automaticky posouvá na další otázku
-- **Sledování progresu**: Ukazatel průběhu a skóre během kvízu
-- **Rekapitulace**: Možnost zobrazit chybné odpovědi na konci kvízu
-- **Prohlížení všech otázek**: Možnost zobrazit všechny otázky a správné odpovědi bez spuštění kvízu
+## Features
 
-## Jak to funguje
+*   **Create Quizzes**: Upload a JSON file with questions to generate a new quiz.
+*   **Browse Quizzes**: View a list of all created quizzes.
+*   **Take Quizzes**: Interactive quiz interface based on the provided HTML template.
+*   **Download Questions**: Download the `questions.json` file for any existing quiz.
+*   **Automatic Naming**: Handles quiz name collisions by appending a random number if a quiz with the same name exists.
+*   **Clean URLs**: Serves quiz pages without `index.html` in the URL.
+*   **Server-Side File Management**: Quiz files and folders are created and managed on the server.
 
-1. **Načtení dat**: Aplikace načte otázky ze souboru `questions.json` při načtení stránky
-2. **Spuštění kvízu**: Po kliknutí na tlačítko "Spustit kvíz" se otázky náhodně zamíchají
-3. **Zodpovídání otázek**: Uživatel vybírá odpovědi na otázky
-   - Při správné odpovědi: Odpověď se zvýrazní zeleně a kvíz automaticky přejde na další otázku
-   - Při špatné odpovědi: Špatná odpověď se zvýrazní červeně, správná odpověď se označí a uživatel musí kliknout na "Další otázka"
-4. **Výsledky**: Na konci kvízu se zobrazí dosažené skóre
-5. **Rekapitulace**: Uživatel může zobrazit přehled otázek, na které odpověděl chybně
+## Prerequisites
 
-## Jak upravit otázky
+*   [Node.js](https://nodejs.org/) (which includes npm) installed on your system.
 
-Otázky jsou uloženy v souboru `questions.json` ve formátu:
+## Running the Application
 
-```json
-[
-  {
-    "id": "unikatni_id",
-    "question": "Text otázky (může obsahovat HTML)",
-    "options": [
-      "Možnost 1",
-      "Možnost 2",
-      "Možnost 3",
-      "Možnost 4",
-      "Možnost 5"
-    ],
-    "correctAnswerIndex": 2  // Index správné odpovědi (počítáno od 0)
-  },
-  // Další otázky...
-]
-```
+1.  **Start the server**:
+    ```bash
+    node server.js
+    ```
+2.  Once the server is running, you will see a message like:
+    ```
+    Quiz app server listening at http://localhost:3000
+    ```
+3.  **Access the application** by opening your web browser and navigating to:
+    *   **Main Page**: `http://localhost:3000/index.html` (or just `http://localhost:3000/`)
 
-- Pro přidání nové otázky jednoduše přidejte nový objekt do JSON pole
-- Pro odstranění otázky odeberte odpovídající objekt z JSON pole
-- Pro změnu existující otázky upravte hodnoty v příslušném objektu
+## File Structure (Key Files)
 
-## Jak spustit aplikaci lokálně
+*   `server.js`: The main backend Express application logic.
+*   `index.html`: The main landing page of the application.
+*   `upload.html`: Page for creating new quizzes by uploading a JSON file.
+*   `browse.html`: Page for listing and accessing existing quizzes.
+*   `quiz_template.html`: The HTML template used for generating individual quiz pages.
+*   `style.css`: CSS styles for the main application pages (`index.html`, `upload.html`, `browse.html`).
+*   `quizzes/`: Directory where individual quiz folders (each containing an `index.html` and `questions.json`) are stored.
+*   `uploads/`: Temporary directory for JSON file uploads during quiz creation.
 
-1. Stáhněte všechny soubory do jednoho adresáře
-2. Otevřete soubor `index.html` v moderním webovém prohlížeči
+## How to Create a Quiz
 
-Pro vývoj a testování doporučujeme použít Live Server extension ve Visual Studio Code:
-
-1. Nainstalujte [Visual Studio Code](https://code.visualstudio.com/)
-2. Nainstalujte rozšíření [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
-3. Otevřete adresář projektu ve VS Code
-4. Klikněte pravým tlačítkem na `index.html` a vyberte "Open with Live Server"
-
-Toto vám umožní provádět změny a okamžitě je vidět bez nutnosti manuálně obnovovat stránku.
-
-## Jak publikovat na Netlify
-
-Pro bezplatné hostování aplikace na internetu můžete využít službu Netlify:
-
-1. **Vytvořte si účet na Netlify**
-   - Navštivte [Netlify](https://www.netlify.com/) a zaregistrujte se (můžete použít GitHub účet)
-
-2. **Nejjednodušší metoda - přetažení adresáře**
-   - Po přihlášení na Netlify přejděte do sekce "Sites"
-   - Přetáhněte celou složku projektu (obsahující `index.html` a `questions.json`) do oblasti s nápisem "Drag and drop your site folder here"
-   - Netlify automaticky nahraje a publikuje vaši stránku
-
-3. **Získání veřejné URL**
-   - Po úspěšném nahrání Netlify vygeneruje náhodnou URL (např. `random-name-123456.netlify.app`)
-   - Tuto URL můžete sdílet s ostatními pro přístup k vašemu kvízu
-
-4. **Volitelné: Úprava názvu stránky**
-   - V přehledu stránky klikněte na "Site settings" a pak na "Change site name"
-   - Zadejte preferovaný název (bude součástí URL jako `vas-nazev.netlify.app`)
-
-5. **Aktualizace obsahu**
-   - Pro aktualizaci stačí znovu přetáhnout složku projektu do Netlify
-   - Nebo můžete nastavit automatické nasazení propojením s GitHub repozitářem
-
-6. **Pokročilé: Propojení s GitHub**
-   - Pokud máte projekt na GitHubu, klikněte na "New site from Git" místo přetažení složky
-   - Vyberte svůj GitHub repozitář a nastavte základní adresář
-   - Netlify poté automaticky aktualizuje web po každém push do repozitáře
-
-Netlify nabízí mnoho dalších funkcí jako vlastní domény, HTTPS certifikáty a formuláře, které jsou dostupné zdarma i v základním plánu.
-
-## Technologie
-
-- HTML5
-- CSS3 (s použitím proměnných pro konzistentní vzhled)
-- Vanilla JavaScript (ES6+)
-- Asynchronní načítání dat (fetch API)
-- Responzivní design pro různé velikosti obrazovek
-
-## Licence
-
-Tato aplikace je volně k použití pro výukové účely.
+1.  Navigate to the "Create New Quiz" page (`http://localhost:3000/upload.html`).
+2.  Enter a name for your quiz.
+3.  Prepare your quiz questions in a JSON file. The format should be as follows:
+    ```json
+    [
+      {
+        "id": "q1",
+        "question": "What is the capital of France?",
+        "options": ["Berlin", "Madrid", "Paris", "Rome"],
+        "correctAnswerIndex": 2
+      },
+      {
+        "id": "q2",
+        "question": "Which planet is known as the Red Planet?",
+        "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+        "correctAnswerIndex": 1
+      }
+      // ... more questions
+    ]
+    ```
+    An example prompt for AI to generate this JSON is also provided on the "Create Quiz" page.
+4.  Upload your JSON file using the file input.
+5.  Click "Generate Quiz Files".
+6.  You will be redirected to a success page with a link to your newly created quiz. The quiz files will be saved on the server in the `quizzes/your_quiz_name/` directory.

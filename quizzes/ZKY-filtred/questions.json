@@ -1,0 +1,427 @@
+[{
+    "question": "Za zakladatele kybernetiky je nejčastěji považován:",
+    "options": ["W.R. Ashby", "A. M. Turing", "N. Wiener"],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 1, Q1"
+  },
+  {
+    "question": "N. Wiener definoval kybernetiku jako vědu o:",
+    "options": [
+      "zpětnovazebních obvodech a počítacích strojích",
+      "automatech a servosystémech",
+      "sdělování a řízení ve strojích a živých organismech"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 1, Q2 / str. 8, Q12"
+  },
+  {
+    "question": "První průmyslově vyráběný regulátor otáček parního stroje (Wattův regulátor) pracoval na principu:",
+    "options": [
+        "elektromagnetické síly",
+        "hydraulického tlaku",
+        "odstředivé síly",
+        "pneumatického mechanismu"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 1, Q3 / str. 5, Q3 / str. 8, Q16"
+  },
+  {
+    "question": "Odstředivý regulátor byl v minulosti nejčastěji použit na:",
+    "options": [
+      "Řízení střídavého napětí elektrického generátoru",
+      "Na řízení otáček parního stroje",
+      "Řízení hladiny v chemickém reaktoru"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 1, Q4"
+  },
+  {
+    "question": "Základní rozdělení řízení je na:",
+    "options": [
+      "zpětnovazební a kompenzační (programové)",
+      "kompenzační a v otevřené smyčce",
+      "zpětnovazební a v uzavřené smyčce"
+    ],
+    "correctAnswerIndex": 0,
+    "source": "ZKY-příklady, str. 1, Q5"
+  },
+  {
+    "question": "Jak velkou entropii (neurčitost) musíme odstranit, abychom věděli, které číslo od 1 do 6 si myslím? (log2(6) ≈ 2.58)",
+    "options": [
+      "Něco mezi 2 a 3 bity",
+      "Log10(6) bitů",
+      "Něco mezi 5 a 7 bity",
+      "Přesně 6 bitů"
+    ],
+    "correctAnswerIndex": 0,
+    "source": "ZKY-příklady, str. 1, Q6"
+  },
+  {
+    "question": "Jak velkou entropii (neurčitost) musíte odstranit, abyste věděli, které číslo od 1 do 4096 si myslím? (log2(4096)=12)",
+    "options": ["10 Bytů (80 bitů)", "12 bitů", "10 bitů", "4096 bitů"],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 1, Q7 / str. 8, Q13"
+  },
+   {
+    "question": "Jak velkou entropii (neurčitost) musíte odstranit, abyste věděli, které číslo od 1 do 8^2002 si myslím? (log2(8^2002)=6006)",
+    "options": ["2002 bitů", "6006 bitů", "8 bitů", "Nespočetně bitů"],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 5, Q4"
+  },
+  {
+    "question": "Buněčný automat Hra „Life“ na (nekonečné) ploše představuje:",
+    "options": [
+      "Autonomní dynamický spojitý systém",
+      "Autonomní konečný automat",
+      "Konečný automat se vstupem"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 1, Q8"
+  },
+  {
+    "question": "Autonomní konečný automat (systém s konečným počtem stavů bez vnějšího vstupu) může generovat posloupnost stavů, která:",
+    "options": [
+      "je vždy pouze periodická od samého počátku",
+      "po konečném počtu kroků přejde na periodickou posloupnost",
+      "je vždy pouze aperiodická (nikdy se neopakuje)"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 1, Q9 / str. 7, Q1"
+  },
+  {
+    "question": "Konvoluce funkcí h(t) a u(t), často značená h(t) * u(t), je definována jako:",
+    "options": [
+        "∫ h(τ)u(t - τ)dτ (integrál od -∞ do ∞)",
+        "∫ h(t)u(τ - t)dτ (integrál od 0 do ∞)",
+        "h(t) * u(t) (prostý součin)",
+        "∫ h(τ)u(τ)dτ (integrál od -∞ do ∞)"
+    ],
+    "correctAnswerIndex": 0,
+    "source": "ZKY-příklady, str. 2, Q10 / str. 7, Q4"
+  },
+   {
+    "question": "Konvoluce váhové funkce h(t) lineárního t-invariantního systému a jeho vstupu u(t) určuje:",
+    "options": [
+        "Výstup systému y(t)",
+        "Přenos systému H(s)",
+        "Stav systému x(t)",
+        "Frekvenční charakteristiku systému H(jω)"
+    ],
+    "correctAnswerIndex": 0,
+    "source": "ZKY-příklady, str. 2, Q11"
+  },
+  {
+    "question": "Jaký tvar má odezva lineárního t-invariantního systému v ustáleném stavu na vstupní sinusový signál?",
+    "options": ["Pilovitý", "Sinusový (stejné frekvence)", "Obdélníkový", "Exponenciální"],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 2, Q12 / str. 8, Q17"
+  },
+   {
+    "question": "Co platí pro impulsní charakteristiku h(t) lineárního t-invariantního systému?",
+    "options": [
+        "Je derivací jeho přechodové charakteristiky g(t)",
+        "Je integrálem jeho přechodové charakteristiky g(t)",
+        "Její Laplaceova transformace je přechodová charakteristika",
+        "Popisuje pouze stabilitu systému"
+    ],
+    "correctAnswerIndex": 0,
+    "source": "ZKY-příklady, str. 2, Q13 / str. 7, Q5"
+  },
+   {
+    "question": "Impulsní charakteristika h(t) lineárního t-invariantního systému je dána:",
+    "options": [
+        "Inverzní Fourierovou transformací přenosu H(jω)",
+        "Inverzní Hilbertovou transformací přenosu",
+        "Inverzní Laplaceovou transformací přenosu H(s)",
+        "Laplaceovou transformací přenosu H(s)"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 2, Q14"
+  },
+  {
+    "question": "Přenos systému H(s) LTI systému je definován jako Laplaceova transformace:",
+    "options": [
+      "Přechodové charakteristiky g(t)",
+      "Impulsní charakteristiky h(t)",
+      "Jednotkového skoku 1(t)",
+      "Výstupního signálu y(t)"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 2, Q15a / str. 7, Q9a"
+  },
+  {
+    "question": "Přenos systému H(s) LTI systému je také definován jako podíl Laplaceových obrazů Y(s)/U(s):",
+    "options": [
+      "Vždy, bez ohledu na počáteční podmínky",
+      "Pouze pro stabilní systémy",
+      "Za *nulových* počátečních podmínek",
+      "Pouze pokud je vstupem Diracův impuls"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 2, Q15b / str. 7, Q9b"
+  },
+  {
+    "question": "Impulsní charakteristika h(t) lineárního t-invariantního systému je odezva systému na:",
+    "options": [
+        "Jednotkový skok 1(t)",
+        "Sinusový signál s jednotkovou amplitudou",
+        "Diracův impuls δ(t)",
+        "Nulový vstup"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 2, Q16 / str. 8, Q18"
+  },
+   {
+    "question": "Z které charakteristiky LTI systému lze obecně určit jeho přenos H(s)?",
+    "options": [
+        "Pouze z nul systému",
+        "Z impulsní nebo přechodové nebo frekvenční charakteristiky",
+        "Pouze z pólů systému",
+        "Pouze z počátečních podmínek"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 2, Q17"
+  },
+  {
+    "question": "Jednostranná Laplaceova transformace funkce h(t) (pro t≥0) je definována jako:",
+    "options": [
+        "∫ h(t)e^(-jωt) dt (integrál od 0 do ∞)",
+        "∫ h(t)e^(-st) dt (integrál od -∞ do ∞)",
+        "∫ h(t)e^(-st) dt (integrál od 0 do ∞)",
+        "∫ h(t)e^(st) dt (integrál od 0 do ∞)"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 3, Q18 / str. 8, Q11"
+  },
+  {
+    "question": "Sériové spojení dvou bloků s přenosy F1(s) a F2(s) má výsledný přenos:",
+    "options": [
+      "F(s) = 1 / (1 + F1(s) + F2(s))",
+      "F(s) = F1(s) + F2(s)",
+      "F(s) = F1(s) * F2(s)",
+      "F(s) = F1(s) / F2(s)"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 3, Q20 / str. 7, Q3"
+  },
+  {
+    "question": "Paralelní spojení dvou bloků s přenosy F1(s) a F2(s) má výsledný přenos:",
+    "options": [
+      "F(s) = F1(s) / (1 + F1(s)*F2(s))",
+      "F(s) = F1(s) + F2(s)",
+      "F(s) = F1(s) * F2(s)",
+      "F(s) = 1 / F1(s) + 1 / F2(s)"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 3, Q21"
+  },
+  {
+    "question": "Jednoduchá zpětnovazební regulační smyčka se typicky skládá z:",
+    "options": [
+      "Pouze dopředné vazby a řízené soustavy",
+      "Regulátoru a řízené soustavy (procesu)",
+      "Pouze regulátoru a měření",
+      "Pouze řízené soustavy a snímače"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 3, Q22 / str. 8, Q20"
+  },
+    {
+    "question": "Inverzní kyvadlo (tyč na vozíku) lze v okolí nestabilní vzpřímené polohy stabilizovat pomocí:",
+    "options": [
+      "Pouze fuzzy regulátoru",
+      "Pouze PID regulátoru",
+      "Lineárního stavového regulátoru (vyžaduje měření všech stavů)",
+      "Není možné jej stabilizovat"
+    ],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 3, Q23"
+  },
+  {
+    "question": "Inverzní kyvadlo (bez aktivního řízení) je ve své vzpřímené (svislé horní) poloze:",
+    "options": ["Na mezi stability", "Stabilní rovnovážný stav", "Nestabilní rovnovážný stav"],
+    "correctAnswerIndex": 2,
+    "source": "ZKY-příklady, str. 3, Q24 / str. 7, Q7 / str. 6, Q24"
+  },
+    {
+    "question": "Pro jaká reálná čísla 'a' je řešení diferenciální rovnice dx/dt = a*x stabilní (tj. x(t) zůstává omezené pro t → ∞)?",
+    "options": ["a < 0", "a > 0", "a < 1", "a = 0"],
+    "correctAnswerIndex": 0,
+    "source": "ZKY-příklady, str. 5, Q36 / str. 8, Q14"
+  },
+   {
+    "question": "Která z následujících technik primárně NESLOUŽÍ k segmentaci obrazu (rozdělení na objekty a pozadí)?",
+    "options": ["Prahování", "Filtrace šumu", "Srovnávání se vzorem (Template matching)", "Detekce hran"],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 5, Q38"
+  },
+   {
+    "question": "Jaký je hlavní účel segmentace digitálního obrazu?",
+    "options": [
+        "Zařadit obrazy do tříd",
+        "Oddělit objekty zájmu od pozadí",
+        "Odstranit z obrazu šum",
+        "Zvýšit kontrast obrazu"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 5, Q39 / str. 8, Q19"
+  },
+  {
+    "question": "Která z následujících operací NEPATŘÍ mezi bodové jasové transformace (mění jas pixelu nezávisle na okolí)?",
+    "options": [
+        "Snížení kontrastu (např. logaritmická transformace)",
+        "Filtrace šumu (např. mediánový filtr)",
+        "Zvýšení jasu (např. přičtení konstanty)",
+        "Prahování"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 5, Q40 / str. 7, Q6"
+  },
+   {
+    "question": "Jakým úkolem je typicky filtrace při zpracování snímků?",
+    "options": [
+        "Zvýraznit šum obsažený v obraze",
+        "Odstranit (potlačit) šum obsažený v obraze",
+        "Zvýraznit hrany v obraze",
+        "Segmentovat obraz"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 5, Q41 / str. 6, Q22"
+  },
+  {
+    "question": "Logické pravidlo 'Modus Ponens' říká:",
+    "options": [
+      "Jsou-li A a B pravdivé, pak z B vyplývá A",
+      "Jestliže platí 'A implikuje B' a zároveň platí 'A', pak platí i 'B'",
+      "Platí-li 'B' a 'z A vyplývá C', pak i 'z B vyplývá A'"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 5, Q42"
+  },
+    {
+    "question": "Pro odezvu lineárního systému platí princip superpozice. Co to znamená?",
+    "options": [
+          "Odezva na vážený součet vstupů je rovna váženému součtu odezev na jednotlivé vstupy",
+          "Systém je vždy stabilní, pokud platí superpozice",
+          "Odezva systému nezávisí na počátečních podmínkách",
+          "Přenos systému je vždy roven 1"
+      ],
+      "correctAnswerIndex": 0,
+      "source": "ZKY-příklady, str. 5, Q6"
+  },
+  {
+      "question": "Běžný audio zesilovač (např. Hi-Fi) se v oblasti svého pracovního rozsahu chová přibližně jako:",
+      "options": [
+          "Nelineární systém",
+          "Lineární časově invariantní systém",
+          "Chaotický systém",
+          "Diskrétní systém"
+      ],
+      "correctAnswerIndex": 1,
+      "source": "ZKY-příklady, str. 5, Q7"
+  },
+    {
+      "question": "Přechodová charakteristika g(t) lineárního t-invariantního systému je:",
+      "options": [
+          "Integrál jeho impulsní charakteristiky h(t) (od 0 do t)",
+          "Derivace jeho impulsní charakteristiky h(t)",
+          "Odezva systému na Diracův impuls δ(t)",
+          "Laplaceova transformace impulsní charakteristiky h(t)"
+      ],
+      "correctAnswerIndex": 0,
+      "source": "ZKY-příklady, str. 6, Q9 / str. 6, Q26"
+  },
+  {
+    "question": "Jaké je obecné řešení diferenciální rovnice dx/dt = ax pro počáteční podmínku x(0)?",
+    "options": [
+        "x(t) = a*t + x(0)",
+        "x(t) = x(0) * e^(at)",
+        "x(t) = x(0) * sin(at)",
+        "x(t) = x(0) / (at + 1)"
+    ],
+    "correctAnswerIndex": 1,
+    "source": "ZKY-příklady, str. 6, Q29"
+  },
+  {
+      "question": "V kterém roce publikoval N. Wiener svou klíčovou knihu 'Cybernetics: Or Control and Communication in the Animal and the Machine'?",
+      "options": ["1945", "1948", "1950", "1960"],
+      "correctAnswerIndex": 1,
+      "source": "ZKY-příklady, str. 5, Jiné Q1"
+  },
+   {
+      "question": "Co bylo historicky jedním z prvních zařízení využívajících princip odstředivé síly pro automatickou regulaci?",
+      "options": ["Hodiny s kyvadlem", "Regulátor otáček parního stroje", "Setrvačník", "Gyroskop"],
+      "correctAnswerIndex": 1,
+      "source": "ZKY-příklady, str. 5, Jiné Q2"
+  },
+   {
+      "question": "Co plně popisuje dynamické chování lineárního časově invariantního systému?",
+      "options": ["Pouze jeho póly", "Pouze jeho nuly", "Jeho impulsní charakteristika", "Pouze jeho statické zesílení"],
+      "correctAnswerIndex": 2,
+      "source": "ZKY-příklady, str. 5, Jiné Q8"
+  },
+  {
+      "question": "Zpětnovazební spojení bloku s přenosem F1(s) (v přímé větvi) a bloku F2(s) (ve zpětné větvi, záporná vazba) má přenos:",
+      "options": ["F1(s) * F2(s)", "F1(s) + F2(s)", "F1(s) / (1 + F1(s)*F2(s))", "F1(s) / (1 - F1(s)*F2(s))"],
+      "correctAnswerIndex": 2,
+      "source": "ZKY-příklady, str. 6, Jiné Q12"
+  },
+    {
+      "question": "Zpětnovazební regulační smyčka musí kromě regulátoru a procesu obsahovat:",
+      "options": ["Dopřednou vazbu", "Zpětnovazební cestu (měření výstupu)", "Prediktor", "Integrátor"],
+      "correctAnswerIndex": 1,
+      "source": "ZKY-příklady, str. 6, Jiné Q13"
+  },
+  {
+      "question": "Metody Umělé inteligence (UI) se typicky NEZABÝVAJÍ přímo:",
+      "options": ["Reprezentací znalostí", "Strojovým učením", "Konstrukcí senzorů a fyzickým měřením", "Řešením úloh a plánováním"],
+      "correctAnswerIndex": 2,
+      "source": "ZKY-příklady, str. 6, Jiné Q15"
+  },
+  {
+      "question": "Algoritmus Minimax se v oblasti UI typicky používá pro:",
+      "options": ["Hraní strategických her pro dva hráče s protichůdnými zájmy", "Optimalizaci výrobních procesů", "Rozpoznávání řeči", "Segmentaci obrazu"],
+      "correctAnswerIndex": 0,
+      "source": "ZKY-příklady, str. 6, Jiné Q16"
+  },
+{
+  "question": "Báze dat v produkčním systému (expertním systému) obsahuje:",
+  "options": [
+      "Obecná pravidla ve formě JESTLIŽE-PAK",
+      "Fakta popisující aktuální stav řešeného problému",
+      "Řídicí mechanismus pro výběr pravidel",
+      "Uživatelské rozhraní"
+  ],
+  "correctAnswerIndex": 1, 
+  "source": "ZKY-příklady, str. 6, Jiné Q17"
+},
+  {
+      "question": "Produkční pravidlo v expertních systémech má nejčastěji formu:",
+      "options": ["JESTLIŽE <podmínka> PAK <akce/závěr>", "PRO VŠECHNY <objekty> PLATÍ <vlastnost>", "EXISTUJE <objekt> TAKOVÝ, ŽE <podmínka>", "PŘIŘAĎ <proměnná> = <hodnota>"],
+      "correctAnswerIndex": 0,
+      "source": "ZKY-příklady, str. 6, Jiné Q18"
+  },
+   {
+      "question": "Řídicí mechanismus (inference engine) v produkčním systému má za úkol:",
+      "options": ["Ukládat fakta o problému", "Učit se nová pravidla z dat", "Porovnávat podmínky pravidel s fakty v bázi dat a vybírat pravidlo k aplikaci", "Komunikovat s uživatelem přirozeným jazykem"],
+      "correctAnswerIndex": 2,
+      "source": "ZKY-příklady, str. 6, Jiné Q20"
+  },
+    {
+      "question": "Diferenciální rovnice dx/dt = x (pro t>0) popisuje systém, který je:",
+      "options": ["Nestabilní (řešení roste exponenciálně)", "Stabilní (řešení klesá k nule)", "Na mezi stability (řešení je konstantní)", "Periodický"],
+      "correctAnswerIndex": 0,
+      "source": "ZKY-příklady, str. 6, Jiné Q21"
+  },
+   {
+      "question": "K oddělení objektů od pozadí na základě úrovně jasu se v zpracování obrazu často využívá:",
+      "options": ["Prahování", "Konvoluce s Gaussovým jádrem", "Fourierova transformace", "Mediánový filtr"],
+      "correctAnswerIndex": 0,
+      "source": "ZKY-příklady, str. 6, Jiné Q23"
+  },
+   {
+      "question": "Detektor hran ve zpracování obrazu slouží k:",
+      "options": ["Nalezení oblastí s podobnou texturou", "Odstranění impulzního šumu", "Nalezení pixelů, kde dochází k prudké změně jasu", "Změně kontrastu obrazu"],
+      "correctAnswerIndex": 2,
+      "source": "ZKY-příklady, str. 6, Jiné Q28"
+  }]
